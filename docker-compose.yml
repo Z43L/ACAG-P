@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  # Base de datos de grafos
+  neo4j:
+    image: neo4j:5.12.0-enterprise
+    environment:
+      - NEO4J_AUTH=neo4j/acag-p-password
+      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+      - NEO4J_dbms_memory_pagecache_size=2G
+      - NEO4J_dbms_memory_heap_max__size=4G
+    ports:
+      - "7474:7474"  # HTTP
+      - "7687:7687"  # Bolt
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    networks:
+      - acag-network
+
+  # Cache y colas de mensajes
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - acag-network
+
+  # Base de datos relacional para metadatos
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=acag_p
+      - POSTGRES_USER=acag_user
+      - POSTGRES_PASSWORD=acag_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - acag-network
+
+  # Servidor principal de la aplicación
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=postgresql://acag_user:acag_password@postgres:5432/acag_p
+    depends_on:
+      - neo4j
+      - redis
+      - postgres
+    networks:
+      - acag-network
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+
+  # Worker para procesamiento asíncrono
+  worker:
+    build: .
+    command: celery -A src.main.celery_app worker --loglevel=info
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+      - neo4j
+    networks:
+      - acag-network
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+
+volumes:
+  neo4_data:
+  neo4j_logs:
+  redis_data:
+  postgres_data:
+
+networks:
+  acag-network:
+    driver: bridge

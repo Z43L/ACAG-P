@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Servicios principales (igual que producción)
+  # ... servicios de producción ...
+
+  # Monitorización
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - acag-network
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana-dashboards:/var/lib/grafana/dashboards
+    networks:
+      - acag-network
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+  # Exportador de métricas para Neo4j
+  neo4j-exporter:
+    image: neo4j-exporter:latest
+    ports:
+      - "9200:9200"
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD}
+    networks:
+      - acag-network
+    restart: unless-stopped
+    depends_on:
+      - neo4j
+
+volumes:
+  prometheus_data:
+  grafana_data:

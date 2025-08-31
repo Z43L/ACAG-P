@@ -1,0 +1,26 @@
+# Configuración del Módulo de Conciencia Interpersonal - ACAG-P
+
+storage:
+  profiles_path: "./data/profiles"
+  memories_path: "./data/memories"
+  backup_interval_hours: 24
+
+interaction_analysis:
+  min_importance_threshold: 0.3
+  max_short_term_memories: 100
+  memory_cleanup_interval_hours: 6
+
+personality_adaptation:
+  adaptation_rate: 0.01
+  max_trait_change_per_day: 0.1
+  trait_stability_threshold: 0.7
+
+privacy:
+  data_retention_days: 365
+  anonymize_user_data: true
+  allow_data_export: true
+
+monitoring:
+  enable_interaction_logging: true
+  log_file: "/var/log/acag/mci.log"
+  metrics_interval_minutes: 30

@@ -1,0 +1,32 @@
+update_policy:
+  channel: "stable"
+  auto_check: true
+  check_interval: "24h"
+  auto_download: false
+  auto_install: false
+  maintenance_window: "01:00-04:00"
+  max_update_size: "2GB"
+  
+rollback_policy:
+  enabled: true
+  keep_backups: 3
+  backup_retention: "7d"
+  auto_rollback_on_failure: true
+  
+notifications:
+  on_update_available: true
+  on_update_start: true  
+  on_update_complete: true
+  on_update_failure: true
+  on_rollback: true
+  
+channels:
+  stable:
+    min_stability: 7
+    testing_required: true
+  beta:
+    min_stability: 3
+    testing_required: false
+  alpha:
+    min_stability: 1
+    testing_required: false

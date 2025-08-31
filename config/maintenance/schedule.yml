@@ -1,0 +1,28 @@
+tasks:
+  - name: cleanup_temp_files
+    function: src.maintenance.scheduled_tasks.cleanup_temp_files
+    interval: daily
+    time: "02:00"
+    
+  - name: optimize_databases
+    function: src.maintenance.scheduled_tasks.optimize_databases  
+    interval: weekly
+    day: "sunday"
+    time: "03:00"
+    
+  - name: rotate_logs
+    function: src.maintenance.scheduled_tasks.rotate_logs
+    interval: daily
+    time: "01:00"
+    
+  - name: backup_system
+    function: src.maintenance.backup.backup_system
+    interval: daily
+    time: "04:00"
+    retention_days: 30
+    
+  - name: model_cache_cleanup
+    function: src.maintenance.models.cleanup_model_cache
+    interval: every_7_days
+    time: "05:00"
+    max_cache_size: 100GB

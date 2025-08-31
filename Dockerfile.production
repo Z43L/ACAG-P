@@ -1,0 +1,39 @@
+FROM python:3.10-slim
+
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Configurar entorno Python
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=on \
+    PIP_DISABLE_PIP_VERSION_CHECK=on
+
+# Crear usuario no root
+RUN useradd --create-home --shell /bin/bash acag
+WORKDIR /app
+RUN chown acag:acag /app
+USER acag
+
+# Copiar requirements e instalar dependencias
+COPY --chown=acag:acag requirements.txt .
+RUN pip install --user -r requirements.txt
+
+# Copiar código de la aplicación
+COPY --chown=acag:acag src/ ./src/
+COPY --chown=acag:acag config/ ./config/
+COPY --chown=acag:acag scripts/ ./scripts/
+
+# Exponer puertos
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Comando de inicio
+CMD ["python", "-m", "src.main"]

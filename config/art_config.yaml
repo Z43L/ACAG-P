@@ -1,0 +1,31 @@
+# Configuración del Agente de Razonamiento y Tareas - ACAG-P
+
+model_router:
+  local_model_path: "./models/acag-local-model"
+  openrouter_api_key: "${OPENROUTER_API_KEY}"
+  default_model: "hybrid"
+  cost_limit_daily: 10.0
+  cost_limit_monthly: 100.0
+
+context_manager:
+  max_history_length: 10
+  context_expiry_hours: 24
+  enable_temporal_context: true
+  enable_knowledge_context: true
+
+knowledge_validator:
+  min_confidence_threshold: 0.6
+  max_claims_per_response: 5
+  enable_validation: true
+  auto_enhance_responses: true
+
+performance:
+  response_timeout_ms: 10000
+  max_concurrent_queries: 100
+  enable_metrics_tracking: true
+
+logging:
+  level: "INFO"
+  file: "/var/log/acag/art.log"
+  max_file_size_mb: 100
+  backup_count: 5

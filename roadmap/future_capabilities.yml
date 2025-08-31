@@ -1,0 +1,60 @@
+# Roadmap de Desarrollo ACAG-P - Próximas Capacidades
+
+version: 2.0
+planned_features:
+  - name: multimodal_processing
+    description: "Procesamiento nativo de imágenes, audio y video"
+    status: "planned"
+    target_release: "2024-Q3"
+    dependencies: ["vision_models", "audio_models"]
+    effort: "high"
+    
+  - name: advanced_reasoning
+    description: "Razonamiento causal y planificación avanzada"
+    status: "research"
+    target_release: "2024-Q4"
+    dependencies: ["causal_models"]
+    effort: "very_high"
+    
+  - name: autonomous_learning
+    description: "Capacidad de auto-mejora sin supervisión humana"
+    status: "planned"
+    target_release: "2025-Q1"
+    dependencies: ["self_supervised_learning"]
+    effort: "high"
+    
+  - name: multi_agent_collaboration
+    description: "Colaboración entre múltiples instancias ACAG-P"
+    status: "exploratory"
+    target_release: "2025-Q2"
+    dependencies: ["distributed_systems"]
+    effort: "medium"
+
+technical_debt:
+  - item: "refactor_core_architecture"
+    description: "Refactorizar arquitectura central para mejor escalabilidad"
+    priority: "high"
+    estimated_effort: "2 meses"
+    
+  - item: "improve_test_coverage"
+    description: "Aumentar cobertura de tests al 90%"
+    priority: "medium"
+    estimated_effort: "1 mes"
+    
+  - item: "optimize_memory_usage"
+    description: "Optimizar uso de memoria en procesamiento de modelos"
+    priority: "high"
+    estimated_effort: "3 semanas"
+
+research_areas:
+  - area: "neuromorphic_computing"
+    description: "Investigación en arquitecturas neuromórficas para eficiencia"
+    status: "exploratory"
+    
+  - area: "quantum_ml"
+    description: "Exploración de aplicaciones de computación cuántica en ML"
+    status: "early_stage"
+    
+  - area: "ethical_ai"
+    description: "Desarrollo de frameworks para IA ética y responsable"
+    status: "active"

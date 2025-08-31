@@ -1,0 +1,38 @@
+groups:
+- name: acag-alerts
+  rules:
+  - alert: HighAPIResponseTime
+    expr: rate(acag_api_request_duration_seconds_sum[5m]) / rate(acag_api_request_duration_seconds_count[5m]) > 3
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High API response time"
+      description: "API response time is above 3 seconds for more than 5 minutes"
+  
+  - alert: Neo4jConnectionIssue
+    expr: acag_neo4j_connected == 0
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Neo4j connection lost"
+      description: "Neo4j database connection has been lost for 2 minutes"
+  
+  - alert: HighErrorRate
+    expr: rate(acag_api_errors_total[5m]) / rate(acag_api_requests_total[5m]) > 0.05
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High error rate"
+      description: "API error rate is above 5% for more than 5 minutes"
+  
+  - alert: SystemMemoryHigh
+    expr: container_memory_usage_bytes{container=~"acag.*"} / container_spec_memory_limit_bytes > 0.8
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High memory usage"
+      description: "Memory usage is above 80% for more than 10 minutes"

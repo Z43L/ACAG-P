@@ -1,0 +1,56 @@
+groups:
+- name: acag-alerts
+  rules:
+  
+  # Alertas del sistema
+  - alert: HighCPUUsage
+    expr: avg(acag_cpu_usage_percent) > 85
+    for: 5m
+    labels:
+      severity: warning
+      component: system
+    annotations:
+      summary: "High CPU usage detected"
+      description: "CPU usage is above 85% for more than 5 minutes"
+      
+  - alert: HighMemoryUsage
+    expr: acag_memory_usage_bytes / node_memory_MemTotal_bytes > 0.9
+    for: 5m
+    labels:
+      severity: critical
+      component: system
+    annotations:
+      summary: "High memory usage detected"
+      description: "Memory usage is above 90% for more than 5 minutes"
+      
+  # Alertas de aplicación
+  - alert: HighErrorRate
+    expr: rate(acag_errors_total[5m]) / rate(acag_requests_total[5m]) > 0.05
+    for: 5m
+    labels:
+      severity: warning
+      component: application
+    annotations:
+      summary: "High error rate detected"
+      description: "Error rate is above 5% for more than 5 minutes"
+      
+  - alert: HighResponseTime
+    expr: histogram_quantile(0.95, rate(acag_request_duration_seconds_bucket[5m])) > 3
+    for: 5m
+    labels:
+      severity: warning
+      component: application
+    annotations:
+      summary: "High response time detected"
+      description: "95th percentile response time is above 3 seconds"
+      
+  # Alertas de modelos
+  - alert: ModelInferenceSlow
+    expr: histogram_quantile(0.95, rate(acag_model_inference_seconds_bucket[5m])) > 5
+    for: 10m
+    labels:
+      severity: warning
+      component: models
+    annotations:
+      summary: "Slow model inference detected"
+      description: "Model inference time is above 5 seconds for 95th percentile"

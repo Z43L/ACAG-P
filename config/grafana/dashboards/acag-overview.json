@@ -1,0 +1,47 @@
+{
+  "dashboard": {
+    "title": "ACAG-P Production Overview",
+    "panels": [
+      {
+        "title": "API Response Times",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(acag_api_request_duration_seconds_sum[5m]) / rate(acag_api_request_duration_seconds_count[5m])",
+            "legendFormat": "avg response time"
+          }
+        ]
+      },
+      {
+        "title": "Query Throughput",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(acag_queries_total[5m])",
+            "legendFormat": "queries/sec"
+          }
+        ]
+      },
+      {
+        "title": "System Health",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "acag_system_health",
+            "legendFormat": "system health"
+          }
+        ]
+      },
+      {
+        "title": "Memory Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "container_memory_usage_bytes{container=~\"acag.*\"}",
+            "legendFormat": "{{container}}"
+          }
+        ]
+      }
+    ]
+  }
+}
